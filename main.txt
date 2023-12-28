@@ -1,0 +1,47 @@
+//14 is motor
+//6 is pot
+
+#include <Servo.h>
+
+Servo myservo;
+
+// Name pin 10 as motorPin for motor pin identification
+int motorPin = 14;
+// Name pin A0 as potPin for potentiometer pin identification
+int potPin = A6;
+
+int controlValue = 0;
+
+void setup () {
+  //starts serieal
+  Serial.begin(9600);
+  //init motor
+  myservo.attach(14);
+  //init pot
+  pinMode(potPin, INPUT);
+}
+
+void loop() {
+  controlValue = analogRead(potPin);
+
+  //maps original controlValue to range of 0-1023
+  controlValue = map(controlValue, 0, 1023, 93, 180);
+  if(controlValue < 0)
+  {
+
+    controlValue = 0;
+    
+  }
+  else if (controlValue > 100)
+  {
+
+    controlValue = 100;
+    
+  }
+  
+  myservo.write(controlValue);
+  // wait 2 milliseconds ADC to settle after the last reading:
+  Serial.println(controlValue);
+  //update fequency
+  delayMicroseconds(200);
+}
